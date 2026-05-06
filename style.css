@@ -1,0 +1,334 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    background: radial-gradient(circle at top, #1a0b2e, #090412, #000000);
+    color: white;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* GENİŞLETİLMİŞ ANA YERLEŞİM */
+#main-layout {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 30px;
+    width: 95%;
+    max-width: 1500px;
+    height: 700px;
+}
+
+.side-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    min-width: 220px;
+}
+
+.game-title {
+    font-size: 30px;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+.stat-box {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.stat-item:last-child {
+    margin-bottom: 0;
+}
+
+.icon {
+    font-size: 24px;
+    margin-right: 15px;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #aaa;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.right-panel {
+    background: rgba(20, 10, 40, 0.4);
+    border: 1px solid #3a1c71;
+    border-radius: 15px;
+}
+
+.panel-title {
+    color: #a275ff;
+    font-size: 18px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.leaderboard {
+    list-style: none;
+    padding: 0 10px;
+}
+
+.leaderboard li {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.rank.gold {
+    color: #ffd700;
+}
+
+.rank.silver {
+    color: #c0c0c0;
+}
+
+.rank.bronze {
+    color: #cd7f32;
+}
+
+/* CANVAS YERLEŞİMİ (Yan Yana) */
+.canvases-wrapper {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+}
+
+.canvas-container {
+    perspective: 800px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.game-canvas {
+    transform: rotateX(35deg);
+    transform-origin: bottom;
+    background: rgba(0, 0, 0, 0.4);
+    border-left: 2px solid rgba(255, 255, 255, 0.1);
+    border-right: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+/* OYUNCULARA ÖZEL ÇERÇEVELER */
+.p1-canvas {
+    border-bottom: 4px solid #00f3ff;
+    box-shadow: 0 0 40px rgba(0, 243, 255, 0.1);
+}
+
+.p2-canvas {
+    border-bottom: 4px solid #ff0055;
+    box-shadow: 0 0 40px rgba(255, 0, 85, 0.1);
+}
+
+/* MODALLAR */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.neon-modal {
+    background: rgba(15, 5, 35, 0.95);
+    border: 2px solid #b700ff;
+    box-shadow: 0 0 30px rgba(183, 0, 255, 0.4), inset 0 0 20px rgba(183, 0, 255, 0.2);
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    width: 400px;
+    backdrop-filter: blur(10px);
+}
+
+.modal-icon {
+    font-size: 50px;
+    margin-bottom: 10px;
+    text-shadow: 0 0 20px #ffffff5a;
+}
+
+.modal-title {
+    font-size: 36px;
+    font-style: italic;
+    background: linear-gradient(90deg, #ff007f, #00f3ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 30px;
+}
+
+.neon-btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    background: transparent;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.play-btn {
+    border: 2px solid #00f3ff;
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.4), inset 0 0 10px rgba(0, 243, 255, 0.2);
+}
+
+.play-btn:hover {
+    background: rgba(0, 243, 255, 0.2);
+    transform: scale(1.02);
+}
+
+.info-btn {
+    border: 2px solid #b700ff;
+    box-shadow: 0 0 15px rgba(183, 0, 255, 0.4), inset 0 0 10px rgba(183, 0, 255, 0.2);
+}
+
+.info-btn:hover {
+    background: rgba(183, 0, 255, 0.2);
+    transform: scale(1.02);
+}
+
+/* ŞARKI LİSTESİ VE KİLİTLER */
+.song-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.song-card {
+    background: rgba(0, 0, 0, 0.6);
+    padding: 15px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+.easy-song {
+    border: 2px solid #00ff00;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+
+.easy-song:hover {
+    background: rgba(0, 255, 0, 0.2);
+    transform: scale(1.02);
+}
+
+.easy-song .song-diff {
+    color: #00ff00;
+}
+
+.medium-song {
+    border: 2px solid #ffff00;
+    box-shadow: 0 0 10px rgba(255, 255, 0, 0.3);
+}
+
+.medium-song:hover {
+    background: rgba(255, 255, 0, 0.2);
+    transform: scale(1.02);
+}
+
+.medium-song .song-diff {
+    color: #ffff00;
+}
+
+.hard-song {
+    border: 2px solid #ff0000;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+}
+
+.hard-song:hover {
+    background: rgba(255, 0, 0, 0.2);
+    transform: scale(1.02);
+}
+
+.hard-song .song-diff {
+    color: #ff0000;
+}
+
+.locked {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+    filter: grayscale(100%);
+}
+
+.lock-icon {
+    display: none;
+    font-size: 16px;
+    margin-left: 10px;
+}
+
+.locked .lock-icon {
+    display: inline-block;
+}
+
+/* EKRAN TİTREMESİ */
+@keyframes shakeCanvas {
+    0% {
+        transform: rotateX(35deg) translate(2px, 1px) rotate(0deg);
+    }
+
+    20% {
+        transform: rotateX(35deg) translate(-3px, 0px) rotate(1deg);
+    }
+
+    40% {
+        transform: rotateX(35deg) translate(1px, -1px) rotate(1deg);
+    }
+
+    60% {
+        transform: rotateX(35deg) translate(-3px, 1px) rotate(0deg);
+    }
+
+    80% {
+        transform: rotateX(35deg) translate(-1px, -1px) rotate(1deg);
+    }
+
+    100% {
+        transform: rotateX(35deg) translate(1px, -2px) rotate(-1deg);
+    }
+}
+
+.shake-effect {
+    animation: shakeCanvas 0.3s cubic-bezier(.36, .07, .19, .97) both;
+}
