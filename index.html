@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SenkronX - Ritim Oyunu</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <audio id="gameMusic"></audio>
+
+    <!-- SAĞ ÜST KONTROLLER -->
+    <div class="top-controls">
+        <div id="coin-display" class="theme-btn" style="border-color: #ffd700; cursor: default; box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);">
+            🪙 <span id="total-coins">0</span>
+        </div>
+        <button id="theme-btn" class="theme-btn">
+            ☀️ Aydınlık Mod
+        </button>
+        <button id="pause-btn" class="pause-btn hidden">
+            ⏸ Duraklat
+        </button>
+    </div>
+
+    <div id="main-layout">
+
+        <!-- PLAYER 1 PANEL -->
+        <div class="side-panel">
+            <h1 class="game-title">
+                <span class="highlight p1-name-glow">Oyuncu 1</span>
+            </h1>
+
+            <div class="stat-box">
+                <div class="stat-item">
+                    <span class="icon">⭐</span>
+                    <div><p class="stat-label">Skor</p><p class="stat-value" id="p1-score">0</p></div>
+                </div>
+                <div class="stat-item">
+                    <span class="icon combo-icon">✖️</span>
+                    <div><p class="stat-label">Kombo</p><p class="stat-value"><span id="p1-combo">0</span>x</p></div>
+                </div>
+                <div class="stat-item">
+                    <span class="icon health-icon">❤️</span>
+                    <div><p class="stat-label">Can</p><p class="stat-value"><span id="p1-health">100</span>%</p></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- OYUN ALANI -->
+        <div class="canvases-wrapper">
+            <div class="canvas-container p1-element">
+                <canvas id="gameCanvasP1" class="game-canvas p1-canvas"></canvas>
+            </div>
+            <div class="canvas-container p2-element hidden">
+                <canvas id="gameCanvasP2" class="game-canvas p2-canvas"></canvas>
+            </div>
+        </div>
+
+        <!-- SAĞ PANEL -->
+        <div class="side-panel right-panel">
+            <!-- SKOR TABLOSU -->
+            <div id="leaderboard-panel">
+                <h2 class="panel-title">Skor Tablosu</h2>
+                <ul class="leaderboard" id="leaderboard-list"></ul>
+            </div>
+
+            <!-- PLAYER 2 PANEL -->
+            <div id="p2-stats-panel" class="hidden">
+                <h1 class="game-title">
+                    <span class="highlight p2-name-glow">Oyuncu 2</span>
+                </h1>
+
+                <div class="stat-box">
+                    <div class="stat-item">
+                        <span class="icon">⭐</span>
+                        <div><p class="stat-label">Skor</p><p class="stat-value" id="p2-score">0</p></div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="icon combo-icon">✖️</span>
+                        <div><p class="stat-label">Kombo</p><p class="stat-value"><span id="p2-combo">0</span>x</p></div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="icon health-icon">❤️</span>
+                        <div><p class="stat-label">Can</p><p class="stat-value"><span id="p2-health">100</span>%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ANA MENÜ -->
+    <div id="start-screen" class="overlay">
+        <div class="neon-modal">
+            <div class="modal-icon">🎵</div>
+            <h1 class="modal-title">SenkronX</h1>
+            <button id="single-player-btn" class="neon-btn play-btn">👤 Tek Kişilik Oyna</button>
+            <button id="two-player-btn" class="neon-btn play-btn" style="border-color:#ffcc00; box-shadow:0 0 15px rgba(255,204,0,0.4);">👥 İki Kişilik Oyna</button>
+            <button id="help-btn" class="neon-btn info-btn">ℹ Nasıl Oynanır?</button>
+        </div>
+    </div>
+
+    <!-- ŞARKI SEÇİM -->
+    <div id="song-selection-screen" class="overlay hidden">
+        <div class="neon-modal" style="width:550px;">
+            <div class="modal-icon">🎧</div>
+            <h1 class="modal-title" style="font-size:28px;">ŞARKI SEÇİMİ</h1>
+            <div class="song-list">
+                
+                <button class="song-card easy-song" data-level="easy">
+                    <span class="song-title">▶ Çakkıdı - Kenan Doğulu</span>
+                    <span class="song-diff">KOLAY</span>
+                </button>
+
+                <button class="song-card medium-song locked" data-level="medium">
+                    <span class="song-title">▶ Snap - Manifest <span id="med-lock-icon" class="lock-icon">🔒</span> <span id="med-price" class="song-price">50 🪙</span></span>
+                    <span class="song-diff">ORTA</span>
+                </button>
+
+                <button class="song-card hard-song locked" data-level="hard">
+                    <span class="song-title">▶ Holocaust - Ceza <span id="hard-lock-icon" class="lock-icon">🔒</span> <span id="hard-price" class="song-price">100 🪙</span></span>
+                    <span class="song-diff">ZOR</span>
+                </button>
+
+            </div>
+            <button id="back-to-menu-btn" class="neon-btn info-btn" style="margin-top:25px;">Geri Dön</button>
+        </div>
+    </div>
+
+    <!-- NASIL OYNANIR -->
+    <div id="help-modal" class="overlay hidden">
+        <div class="neon-modal" style="width:500px;">
+            <h2 class="modal-title" style="font-size:24px;">Kontroller</h2>
+            <div class="help-text-container" style="color:#fff; margin-bottom:20px; font-size:18px; text-align:left; padding:0 20px;">
+                <p style="margin-bottom:10px; color:#00f3ff;"><strong>👤 Oyuncu 1:</strong> Z, X, C, V</p>
+                <p style="margin-bottom:20px; color:#ff0055;"><strong>👥 Oyuncu 2:</strong> U, I, O, P</p>
+                <p style="color:#ffcc00; font-size:16px;">⚠️ Kırmızı bombalara basarsan canın azalır.</p>
+                <p style="color:#ffd700; font-size:16px; margin-top:10px;">🪙 Altın paralara basarak yeni şarkı kilidi açabilirsin.</p>
+                <p style="color:#00ff00; font-size:16px; margin-top:10px;">🎯 Zamanlamana göre MÜKEMMEL, HARİKA veya İYİ alırsın!</p>
+            </div>
+            <button id="close-help" class="neon-btn info-btn">Anladım</button>
+        </div>
+    </div>
+
+    <div id="pause-menu" class="overlay hidden">
+        <div class="neon-modal" style="width: 420px;">
+            <h2 class="modal-title" style="font-size: 28px;">OYUN DURAKLATILDI</h2>
+            <button id="resume-btn" class="neon-btn play-btn">▶ Devam Et</button>
+            <button id="restart-btn" class="neon-btn info-btn">🔄 Yeniden Başla</button>
+            <button id="pause-menu-btn" class="neon-btn" style="border: 2px solid #555;">🏠 Menüye Dön</button>
+        </div>
+    </div>
+
+    <!-- OYUN SONU -->
+    <div id="game-over-screen" class="overlay hidden">
+        <div class="neon-modal" style="width:500px;">
+            <h2 id="end-title" class="modal-title" style="font-size:28px;">OYUN BİTTİ</h2>
+
+            <!-- TEK KİŞİLİK -->
+            <div id="sp-end-stats" class="end-stats hidden" style="margin-bottom:25px; color:white; font-size:18px;">
+                <p>Skor: <strong id="final-score" style="color:#00f3ff;">0</strong></p>
+                <p>Maksimum Kombo: <strong id="final-max-combo" style="color:#b700ff;">0</strong>x</p>
+                <p style="margin-top: 10px;">Kazanılan: <strong id="sp-session-coins" style="color:#ffd700;">0</strong> 🪙</p>
+            </div>
+
+            <!-- İKİ KİŞİLİK -->
+            <div id="tp-end-stats" class="end-stats hidden" style="margin-bottom:25px; color:white; font-size:18px;">
+                <p>Oyuncu 1: <strong id="p1-final-score" style="color:#00f3ff;">0</strong></p>
+                <p>Oyuncu 2: <strong id="p2-final-score" style="color:#ff0055;">0</strong></p>
+                <p style="margin-top: 10px;">Toplam Kazanılan: <strong id="tp-session-coins" style="color:#ffd700;">0</strong> 🪙</p>
+            </div>
+
+            <div class="end-buttons">
+                <button id="retry-btn" class="neon-btn play-btn">🔄 Tekrar Dene</button>
+                <button id="next-song-btn" class="neon-btn info-btn hidden">⏭ Sonraki Şarkı</button>
+                <button id="menu-btn" class="neon-btn" style="border:2px solid #555;">🏠 Menüye Dön</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- İSİM GİRİŞ MODALI -->
+    <div id="name-modal" class="overlay hidden">
+        <div class="neon-modal" style="width:450px;">
+            <h2 class="modal-title" style="font-size:28px;">Oyuncu Bilgileri</h2>
+            <div id="p1-name-box">
+                <input id="p1-name-input" type="text" placeholder="1. Oyuncu İsmi" class="name-input">
+            </div>
+            <div id="p2-name-box" class="hidden" style="margin-top:15px;">
+                <input id="p2-name-input" type="text" placeholder="2. Oyuncu İsmi" class="name-input">
+            </div>
+            <button id="start-with-names-btn" class="neon-btn play-btn" style="margin-top:25px;">Oyuna Devam Et</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
